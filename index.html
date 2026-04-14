@@ -1,1 +1,246 @@
-<h1>Hola, esta es una prueba.</h1>
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Portafolio — Data Science</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+  <!-- ─── NAVBAR ─── -->
+  <nav>
+    <div class="nav-logo">ML<span>.</span></div>
+    <ul class="nav-links">
+      <li><a href="#inicio">Inicio</a></li>
+      <li><a href="#proyectos">Proyectos</a></li>
+      <li><a href="#sobre-mi">Sobre mí</a></li>
+      <li><a href="#contacto">Contacto</a></li>
+    </ul>
+  </nav>
+
+  <!-- ─── HERO ─── -->
+  <section id="inicio">
+    <div class="hero-inner">
+      <div class="hero-text">
+        <div class="hero-badge">Data Science &amp; Economics</div>
+        <h1>¡Hola! Soy Marco,<br/>economista y <em>científico de datos.</em></h1>
+        <p class="hero-sub">
+          Mi nombre es Marco Lauxmann Granillo. Soy economista especializado en análisis de datos y machine learning. Tengo experiencia en modelado económico, análisis estadístico y visualización de datos.
+        </p>
+        <a href="#proyectos" class="hero-cta">
+          Ver proyectos
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+            <path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </a>
+      </div>
+
+      <div class="hero-photo">
+        <div class="photo-frame">
+          <!-- Si images/fotoperfil.png existe, mostrará la foto; si no, muestra un placeholder -->
+          <img 
+            src="images/fotoperfil.jpeg" 
+            class="foto-perfil"
+            alt="Foto de perfil"
+            onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';"
+            id = 
+          />
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── SKILLS ─── -->
+  <section id="habilidades">
+    <p class="section-label">Herramientas &amp; Tecnologías</p>
+    <h2 class="section-title">Mis <span style="color:#1a1a2e; text-decoration: underline; text-decoration-color: var(--accent2); text-underline-offset: 6px;">habilidades</span> técnicas</h2>
+
+    <div class="skills-grid">
+      <div class="skill-chip primary"><span class="skill-dot"></span> Python</div>
+      <div class="skill-chip primary"><span class="skill-dot"></span> SQL</div>
+      <div class="skill-chip primary"><span class="skill-dot"></span> R</div>
+      <div class="skill-chip primary"><span class="skill-dot"></span> Stata</div>
+      <div class="skill-chip accent"><span class="skill-dot"></span> Tableau</div>
+      <div class="skill-chip accent"><span class="skill-dot"></span> Power BI</div>
+      <div class="skill-chip secondary"><span class="skill-dot"></span> Excel</div>
+      <div class="skill-chip secondary"><span class="skill-dot"></span> Word</div>
+      <div class="skill-chip secondary"><span class="skill-dot"></span> PowerPoint</div>
+      <div class="skill-chip third"><span class="skill-dot"></span> Matemática</div>
+      <div class="skill-chip third"><span class="skill-dot"></span> Estadística</div>
+      <div class="skill-chip third"><span class="skill-dot"></span> Econometría</div>
+    </div>
+  </section>
+
+  <!-- ─── PROJECTS ─── -->
+  <section id="proyectos">
+    <p class="section-label">Trabajos</p>
+    <h2 class="section-title">Proyectos <em style="font-style:normal; color:var(--accent);">destacados</em></h2>
+
+    <div class="projects-grid">
+
+      <a href="proyecto1.html" class="project-card">
+        <div class="card-number">01</div>
+        <div class="card-tag">Análisis de datos</div>
+        <div class="card-title">Análisis de misiones espaciales</div>
+        <p class="card-desc">Este proyecto utiliza una base de datos de misiones espaciales desde 1957 a 2020 y se hace una limpieza, exploración y visualización de los datos.</p>
+        <div class="card-footer">
+          <div class="card-tools">
+            <span class="tool-badge">Python</span>
+            <span class="tool-badge">Estadística descriptiva</span>
+          </div>
+          <span class="card-arrow">↗</span>
+        </div>
+      </a>
+
+      <a href="proyecto2.html" class="project-card">
+        <div class="card-number">02</div>
+        <div class="card-tag">Machine Learning</div>
+        <div class="card-title">Créditos bancarios</div>
+        <p class="card-desc">En este proyecto se busca entender qué diferencia a un buen pagador de un mal pagador de crédito bancario.</p>
+        <div class="card-footer">
+          <div class="card-tools">
+            <span class="tool-badge">Python</span>
+            <span class="tool-badge">Regresión Logística</span>
+            <span class="tool-badge">Random Forest</span>
+          </div>
+          <span class="card-arrow">↗</span>
+        </div>
+      </a>
+
+      <a href="proyecto3.html" class="project-card">
+        <div class="card-number">03</div>
+        <div class="card-tag">Visualización interactiva</div>
+        <div class="card-title">Airbnb en NY</div>
+        <p class="card-desc">Recorrido visual interactivo sobre los anuncios de Airbnb en New York durante el año 2019.</p>
+        <div class="card-footer">
+          <div class="card-tools">
+            <span class="tool-badge">Excel</span>
+            <span class="tool-badge">Tableau</span>
+          </div>
+          <span class="card-arrow">↗</span>
+        </div>
+      </a>
+
+      <a href="proyecto4.html" class="project-card">
+        <div class="card-number">04</div>
+        <div class="card-tag">Visualización</div>
+        <div class="card-title">Proyecto 4</div>
+        <p class="card-desc">En proceso...</p>
+        <div class="card-footer">
+          <div class="card-tools">
+            <span class="tool-badge">Power BI</span>
+            <span class="tool-badge">SQL</span>
+          </div>
+          <span class="card-arrow">↗</span>
+        </div>
+      </a>
+
+      <a href="proyecto5.html" class="project-card">
+        <div class="card-number">05</div>
+        <div class="card-tag">Modelado Económico</div>
+        <div class="card-title">Proyecto 5</div>
+        <p class="card-desc">En proceso...</p>
+        <div class="card-footer">
+          <div class="card-tools">
+            <span class="tool-badge">Python</span>
+          </div>
+          <span class="card-arrow">↗</span>
+        </div>
+      </a>
+
+    </div>
+  </section>
+
+  <!-- ─── ABOUT ─── -->
+  <section id="sobre-mi">
+    <p class="section-label">Quién soy</p>
+    <h2 class="section-title">Sobre <span style="text-decoration: underline; text-decoration-color: var(--accent2); text-underline-offset: 6px;">mí</span></h2>
+
+    <div class="about-content">
+      <div class="about-text">
+        <p>
+          Soy economista con rigurosa formación en análisis económico y con un gran interés en Data Science. Esto me permite combinar herramientas modernas de análisis de datos con un sólido entendimiento estadístico y matemático.
+        </p>
+        <p>
+          Busco trabajar en ambientes de alta competitividad para poder seguir aprendiendo y mejorando.
+        </p>
+      </div>
+
+      <div class="about-stats">
+        <div class="stat-box">
+          <div class="stat-number">3<span>+</span></div>
+          <div class="stat-label">Proyectos completados</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-number">9</div>
+          <div class="stat-label">Herramientas dominadas</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-number">1<span>+</span></div>
+          <div class="stat-label">Años de experiencia</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-number">1</div>
+          <div class="stat-label">Maestría en curso</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── CONTACT ─── -->
+  <section id="contacto">
+    <div class="contact-grid">
+      <div>
+        <p class="section-label" style="color:rgba(0,229,192,0.5);">Hablemos</p>
+        <h2 class="contact-heading">¿Tenés un<br/>proyecto? <em>Escribime.</em></h2>
+        <p class="contact-intro">Estoy disponible para oportunidades laborales, colaboraciones o simplemente para charlar sobre datos.</p>
+      </div>
+
+      <div class="contact-items">
+
+        <div class="contact-item">
+          <div class="contact-icon">💼</div>
+          <div class="contact-info">
+            <label>LinkedIn</label>
+            <a href="https://www.linkedin.com/in/marco-lauxmann-granillo/" target="_blank">linkedin.com/in/marco-lauxmann-granillo</a>
+          </div>
+        </div>
+
+        <div class="contact-item">
+          <div class="contact-icon">📍</div>
+          <div class="contact-info">
+            <label>Ubicación</label>
+            <span>San Nicolás - Ciudad Autónoma de Buenos Aires</span>
+          </div>
+        </div>
+
+        <div class="contact-item">
+          <div class="contact-icon">📞</div>
+          <div class="contact-info">
+            <label>Teléfono</label>
+            <span>+5493815272910</span>
+          </div>
+        </div>
+
+        <div class="contact-item">
+          <div class="contact-icon">📧</div>
+          <div class="contact-info">
+            <label>Mail</label>
+            <a href="mailto:marco.lauxmann@gmail.com" target="_blank">marco.lauxmann@gmail.com</a>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="footer-bar">
+      <p>© 2025 — Portafolio Data Science. Todos los derechos reservados.</p>
+      <div class="footer-logo">ML.</div>
+    </div>
+  </section>
+
+</body>
+</html>

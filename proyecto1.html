@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Misiones Espaciales — Proyecto 1</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles1.css" />
+</head>
+<body>
+
+  <!-- ── NAV ── -->
+  <nav>
+    <a href="index.html" class="nav-back">
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+        <path d="M13 8H3M7 4L3 8l4 4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      Volver al portafolio
+    </a>
+    <div class="nav-logo">ML<span>.</span></div>
+    <span class="nav-tag">Proyecto 01</span>
+  </nav>
+
+  <!-- ── HERO ── -->
+  <section class="project-hero">
+    <div class="hero-content">
+      <div class="hero-eyebrow">
+        <span class="hero-num">01 / 05</span>
+        <span class="hero-divider"></span>
+        <span class="hero-badge">Análisis de Datos</span>
+      </div>
+      <h1>Misiones<br/><em>Espaciales</em></h1>
+      <div class="hero-meta">
+        <div class="meta-item">
+          <span class="meta-label">Período analizado</span>
+          <span class="meta-value">1957 — 2020</span>
+        </div>
+        <div class="meta-item">
+          <span class="meta-label">Fuente</span>
+          <span class="meta-value">nextspaceflight.com</span>
+        </div>
+        <div class="meta-item">
+          <span class="meta-label">Herramientas</span>
+          <div class="meta-chips">
+            <span class="meta-chip">Python</span>
+            <span class="meta-chip">Pandas</span>
+            <span class="meta-chip">Matplotlib</span>
+            <span class="meta-chip">Seaborn</span>
+            <span class="meta-chip">KaggleHub</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── INTRO ── -->
+  <div class="intro-block">
+    <div class="intro-inner">
+      <div>
+        <p class="intro-label">Introducción</p>
+        <h2 class="intro-side-title">¿De qué trata este proyecto?</h2>
+      </div>
+      <div class="intro-text">
+        <p>
+          Este proyecto analiza la base de datos de <strong style="color:var(--text);">nextspaceflight.com</strong>, que registra todas las misiones espaciales, para un grupo de países, desde el inicio de la carrera espacial entre Estados Unidos y la Unión Soviética en 1957 hasta agosto de 2020.
+        </p>
+        <p>
+          La base incluye el nombre de las organizaciones responsables, ubicación de lanzamiento, fecha, estado del cohete y la misión, precio y otros detalles. El objetivo es explorar patrones históricos, comparar actores clave y entender la evolución de la industria.
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── ANÁLISIS ── -->
+  <div class="content-wrapper">
+
+    <!-- SECCIÓN 1 -->
+    <div class="analysis-section">
+      <div class="section-header">
+        <div class="section-num">01</div>
+        <div class="section-heading-group">
+          <span class="section-tag">Evolución temporal</span>
+          <h2>Misiones y países</h2>
+        </div>
+      </div>
+      <div class="analysis-body">
+        <p class="analysis-desc">
+          Este gráfico muestra la evolución de la cantidad de lanzamientos a lo largo del tiempo. Se observa que desde el comienzo de la carrera espacial la cantidad de misiones espaciales aumentó considerablemente llegando a un pico en 1971. Luego disminuyó y se mantuvo estable durante varios años, hasta los años recientes donde comenzó a aumentar nuevamente.
+        </p>
+        <div class="chart-container">
+          <img src="proyecto1/images/Misiones por Año.jpg" alt="Número de misiones por año" />
+        </div>
+
+
+        <p class="analysis-desc">
+          <br>
+          A continuación se muestra cómo evolucionó la tasa de éxito de las misiones a lo largo del tiempo. Es importante mencionar que las misiones son de distinto tipo, de distinto objetivo y de distinto presupuesto, es por eso que pueda parecer que la capacidad de los equipos no mejora con el tiempo, sin embargo lo que sucede es que se prueban disinto tipos de misiones de diferente dificultad.
+        </p>
+        <div class="chart-container">
+          <img src="proyecto1/images/Tasa de éxito.png" alt="Número de misiones por año" />
+        </div>
+
+        <p class="analysis-desc">
+          <br>
+          Se muestra también el top 10 de países con más misiones. Como dato importante se menciona que gran parte de las misiones que se le contabilizan a Kazahstan se hicieron durante la ex URSS.
+        </p>
+        <div class="chart-container">
+          <img src="proyecto1/images/Top 10 países.png" alt="Número de misiones por año" />
+        </div>
+
+        <p class="analysis-desc">
+          <br>
+          Se muestra también la evolución en el tiempo en el éxito de las misiones del top 5 de países con más misiones.
+        </p>
+        <div class="chart-container">
+          <img src="proyecto1/images/Fiabilidad histórica países.png" alt="Número de misiones por año" />
+        </div>
+
+        <p class="analysis-desc">
+          <br>
+          Por último en esta sección se muestra el top 20 de países de acuerdo a la tasa de éxito total, es decir, un resumen para todos los años considerados en la base de datos. Para que la comparación sea justa se grafican únicamente los países que tengan un mínimo de 10 misiones.
+        </p>
+        <div class="chart-container">
+          <img src="proyecto1/images/Top20pais.png" alt="Número de misiones por año" />
+        </div>
+
+
+
+      </div>
+    </div>
+
+    <!-- SECCIÓN 2 -->
+    <div class="analysis-section">
+      <div class="section-header">
+        <div class="section-num">02</div>
+        <div class="section-heading-group">
+          <span class="section-tag">Guerra Fría</span>
+          <h2>Carrera espacial: USA vs URSS</h2>
+        </div>
+      </div>
+      <div class="analysis-body">
+        <p class="analysis-desc">
+          La Carrera Espacial no fue solo una competencia técnica sobre quién llegaba más lejos, fue la máxima expresión de la Guerra Fría librada en el terreno de la propaganda, la ideología y la tecnología militar. Por su importancia histórica se muestra la comparación entre USA y URSS (luego Rusia) durante todos los años disponibles.
+        </p>
+        <div class="chart-container">
+          <img src="proyecto1/images/Carrera espacial.png" alt="USA vs URSS" />
+        </div>
+      </div>
+    </div>
+
+    <!-- SECCIÓN 3 -->
+    <div class="analysis-section">
+      <div class="section-header">
+        <div class="section-num">03</div>
+        <div class="section-heading-group">
+          <span class="section-tag">El rol de las organizaciones</span>
+          <h2>Misiones y resultados</h2>
+        </div>
+      </div>
+
+      <div class="analysis-body">
+        <p class="analysis-desc">
+          El análisis de las organizaciones comienza comparando el top 10 con más misiones espaciales a lo largo de la historia.
+        </p>
+        <div class="chart-container">
+          <img src="proyecto1/images/Top 10 organizaciones.jpg" alt="Top 10 países" />
+        </div>
+      </div>
+
+      <div class="analysis-body">
+        <p class="analysis-desc">
+          <br>
+          Se sigue comparando la fiabilidad histórica de las organizaciones con más misiones.
+        </p>
+        <div class="chart-container">
+          <img src="proyecto1/images/Fiabilidad histórica.png" alt="Top 10 países" />
+        </div>
+      </div>
+
+      <div class="analysis-body">
+        <p class="analysis-desc">
+          <br>
+          En el siguiente gráfico se muestra en orden descendente las organizaciones más exitosas de la historia de acuerdo a la tasa de éxito.
+        </p>
+        <div class="chart-container">
+          <img src="proyecto1/images/Top20.png" alt="Top 10 países" />
+        </div>
+      </div>
+
+      <div class="analysis-body">
+        <p class="analysis-desc">
+          <br>
+          Por último se presentan los resultados generales de todas las misiones de la historia que esta base de datos contiene.
+        </p>
+        <div class="chart-container">
+          <img src="proyecto1/images/Resultados generales.png" alt="Top 10 países" />
+        </div>
+      </div>
+      
+    </div>
+
+    <!-- SECCIÓN 4 -->
+    <div class="analysis-section">
+      <div class="section-header">
+        <div class="section-num">04</div>
+        <div class="section-heading-group">
+          <span class="section-tag">Costos</span>
+          <h2>Relación entre costo total de una misión y su éxito</h2>
+        </div>
+      </div>
+      
+      <div class="analysis-body">
+        <p class="analysis-desc">
+          Para poder graficar correctamente el histograma y que visualmente tenga fácil interpretación se exlcuyeron los valores extremos a la derecha, es decir, cualquier misión con un costo superior a los US$ 1.000.000.000.
+        </p>
+        <div class="chart-container">
+          <img src="proyecto1/images/Histograma precio.png" alt="Top 10 países" />
+        </div>
+      </div>
+
+
+      <div class="analysis-body">
+        <p class="analysis-desc">
+          <br>
+          La evolución de estos precios a lo largo del tiempo no ha tenido un solo sentido. Durante la carrera lunar, el costo promedio por misión aumentaba a medida que los países competían por conseguir uno de los hitos más grandes de la humanidad. Luego de esto las misiones bajaron el costo porque las misiones no apuntaban tan alto, esto fue así hasta que vino la era de desarrollo de transboradadores espaciales, especialmente con el programa de la USSR Energia-Burán, un programa con un presupuesto de US$5.000.000.000 para el desarrollo de los mismos, sin embargo esta era terminó por los elevados costos. Finalmente se cierra la línea de tiempo con la era New Space, una era marcada por la suma de SpaceX al selecto grupo de organizaciones espaciales, y esta era está marcada por una significante reducción en los costos.
+        </p>
+        <div class="chart-container">
+          <img src="proyecto1/images/Evolución costo promedio por año.png" alt="Top 10 países" />
+        </div>
+      </div>
+
+
+      <div class="analysis-body">
+        <p class="analysis-desc">
+          <br>
+          La mejor forma de mostrar la relación entre los precios y el estado de una misión es mediante gráficos de caja, estos comparan la distribución de precios filtrando por categorías de la variable estado.<br>
+          Se observa que existe una relación entre el éxito de una misión y el presupuesto de esta. Mientras mayor sea el presupuesto, mayor será el éxito de una misión, en promedio.
+        </p>
+        <div class="chart-container">
+          <img src="proyecto1/images/Boxplot.png" alt="Top 10 países" />
+        </div>
+      </div>
+
+      </div>
+    </div>
+
+  </div><!-- /content-wrapper -->
+
+  <!-- ── FOOTER ── -->
+  <footer class="project-footer">
+    <div class="footer-inner">
+      <div class="footer-text">
+        <strong>Análisis de Misiones Espaciales</strong>
+        <p>Fuente: nextspaceflight.com · Python, Pandas, Matplotlib, Seaborn, KaggleHub.</p>
+      </div>
+      <div class="footer-nav">
+        <a href="index.html" class="footer-btn secondary">
+          <svg width="14" height="14" viewBox="0 0 16 16" fill="none">
+            <path d="M13 8H3M7 4L3 8l4 4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          Volver al portafolio
+        </a>
+        <a href="proyecto2.html" class="footer-btn primary">
+          Siguiente proyecto
+          <svg width="14" height="14" viewBox="0 0 16 16" fill="none">
+            <path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </a>
+      </div>
+    </div>
+  </footer>
+
+</body>
+</html>

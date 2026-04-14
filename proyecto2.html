@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Riesgo Crediticio — Proyecto 2</title>
+  <link rel="stylesheet" href="styles2.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet">
+  <script src="script2.js"></script>
+</head>
+<body>
+
+  <!-- ── NAV ── -->
+  <nav>
+    <a href="index.html" class="nav-back">
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+        <path d="M13 8H3M7 4L3 8l4 4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      Volver al portafolio
+    </a>
+    <div class="nav-logo">ML<span>.</span></div>
+    <span class="nav-tag">Proyecto 02</span>
+  </nav>
+
+  <!-- ── HERO ── -->
+  <section class="project-hero">
+    <div class="hero-content">
+      <div class="hero-eyebrow">
+        <span class="hero-num">02 / 05</span>
+        <span class="hero-divider"></span>
+        <span class="hero-badge">Machine Learning</span>
+      </div>
+      <h1>Análisis de <em>Riesgo</em><br/>Crediticio</h1>
+      <div class="hero-meta">
+        <div class="meta-item">
+          <span class="meta-label">Objetivo</span>
+          <span class="meta-value">Clasificación de clientes</span>
+        </div>
+        <div class="meta-item">
+          <span class="meta-label">Fuente</span>
+          <span class="meta-value">Kaggle.com</span>
+        </div>
+        <div class="meta-item">
+          <span class="meta-label">Herramientas</span>
+          <div class="meta-chips">
+            <span class="meta-chip">Python</span>
+            <span class="meta-chip">Sklearn</span>
+            <span class="meta-chip">Pandas</span>
+            <span class="meta-chip">Numpy</span>
+            <span class="meta-chip">Matplotlib</span>
+            <span class="meta-chip">Seaborn</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── INTRO ── -->
+  <div class="intro-block">
+    <div class="intro-inner">
+      <div>
+        <p class="intro-label">Introducción</p>
+        <h2 class="intro-side-title">¿Qué separa a un buen pagador de uno riesgoso?</h2>
+      </div>
+      <div class="intro-text">
+        <p>
+          El objetivo de este análisis es entender qué características separan a un "buen pagador" de uno con "riesgo de impago". Para ello se construyeron y compararon modelos de clasificación supervisada sobre una base de datos de clientes bancarios.
+        </p>
+        <p>
+          Podés descargar el código completo con el que se realizó este análisis haciendo click
+          <a onclick="forzarDescarga('proyecto2/proyecto2.ipynb', 'notebook.ipynb')" class="download-link">
+            <svg width="13" height="13" viewBox="0 0 16 16" fill="none">
+              <path d="M8 3v8M5 8l3 3 3-3M3 13h10" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            aquí.
+          </a>
+          Si el link de descarga no funciona el proyecto está disponible en mi GitHub.
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── SECCIONES DE ANÁLISIS ── -->
+  <div class="content-wrapper">
+
+    <!-- SECCIÓN 1: Primer vistazo -->
+    <div class="analysis-section">
+      <div class="section-header">
+        <div class="section-num">01</div>
+        <div class="section-heading-group">
+          <span class="section-tag">Exploración inicial</span>
+          <h2>Primer vistazo a los datos</h2>
+        </div>
+      </div>
+      <div class="analysis-body">
+        <p class="analysis-desc">
+          Los datos fueron obtenidos de kaggle.com, es una base de datos de clientes bancarios con información de los clientes al momento de tomar deuda, y una variable que dice si en los 2 años siguientes el cliente entró en default. <br>
+          El primer paso para trabajar con los datos es dar un primer vistazo a la base. Las variables del dataset son: Default 2 años después, uso de tarjeta de crédito, edad, morosidad 30-59 días, morosidad 60-89 días, morosidad más de 90 días, ratio deuda-ingeso, ingreso mensual, número de créditos y préstamos abiertos, créditos hipotecarios, personas dependientes del solicitante.
+        </p>
+        <p class="analysis-desc">
+          La primera variable es la variable de interés: indica si una persona entra en situación de default con el banco dentro de los 2 años de tomar el crédito. El dataframe cuenta con 150.000 filas, de las cuales 139.974 corresponden a personas en situación normal y 10.026 a situación de default. Esto da una primera aproximación de que los datos están desbalanceados, como se observa a continuación.
+        </p>
+        <div class="chart-container">
+          <img src="proyecto2/images/Situación_crediticia.png" alt="Distribución situación crediticia" />
+          <div class="chart-caption">
+            <span class="caption-dot"></span>
+            <span>Fig. 1 — Distribución de clientes por situación crediticia (default vs. normal)</span>
+          </div>
+        </div>
+        <p class="analysis-desc">
+          El siguiente paso consiste en la limpieza de los datos. Para más detalles sobre cómo se realizó esta limpieza, consultá la Jupyter Notebook descargándola arriba o desde el repositorio de GitHub. El resultado es que la cantidad de observaciones pasa de 150.000 a 117.362, conservando únicamente registros completos en todas las columnas. Esta parte es importante para poder entrenar los modelos correctamente.
+        </p>
+      </div>
+    </div>
+
+    <!-- SECCIÓN 2: Visualización -->
+    <div class="analysis-section">
+      <div class="section-header">
+        <div class="section-num">02</div>
+        <div class="section-heading-group">
+          <span class="section-tag">Análisis exploratorio</span>
+          <h2>Visualización de los datos</h2>
+        </div>
+      </div>
+      <div class="analysis-body">
+        <p class="analysis-desc">
+          El siguiente paso es la visualización de los datos. En primer lugar se presenta la distribución del ingreso mensual para las personas en situación de default y en situación de pago normal.
+        </p>
+        <div class="chart-container">
+          <img src="proyecto2/images/distribucion_ingreso.png" alt="Distribución ingreso mensual" />
+          <div class="chart-caption">
+            <span class="caption-dot"></span>
+            <span>Fig. 2 — Distribución del ingreso mensual por situación crediticia</span>
+          </div>
+        </div>
+        <p class="analysis-desc">
+          En la imagen anterior puede observarse cómo estas distribuciones son bastante similares, lo que implica que en principio no puede obtenerse un insight demasiado claro sobre la relación entre default e ingreso. En la siguiente imagen se superponen ambas distribuciones para hacer más clara esta comparación.
+        </p>
+        <div class="chart-container">
+          <img src="proyecto2/images/distribucion2.png" alt="Distribuciones superpuestas" />
+          <div class="chart-caption">
+            <span class="caption-dot"></span>
+            <span>Fig. 3 — Superposición de distribuciones de ingreso: default vs. normal</span>
+          </div>
+        </div>
+        <p class="analysis-desc">
+          Para obtener una mirada completa de la relación entre todas las variables se presenta a continuación un mapa de calor con las correlaciones lineales entre ellas.
+        </p>
+        <div class="chart-container">
+          <img src="proyecto2/images/correlaciones.png" alt="Mapa de calor de correlaciones" />
+          <div class="chart-caption">
+            <span class="caption-dot"></span>
+            <span>Fig. 4 — Mapa de correlaciones lineales entre variables del dataset</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SECCIÓN 3: Regresión logística -->
+    <div class="analysis-section">
+      <div class="section-header">
+        <div class="section-num">03</div>
+        <div class="section-heading-group">
+          <span class="section-tag">Modelo predictivo</span>
+          <h2>Regresión Logística</h2>
+        </div>
+      </div>
+      <div class="analysis-body">
+        <p class="analysis-desc">
+          Los datos se dividen aleatoriamente en dos grupos: un 80% para entrenar el modelo y un 20% para testear su calidad predictiva. El modelo se entrena con la librería <em>sklearn</em> con un máximo de 10.000 iteraciones. El umbral de clasificación está fijado en 0.5: si la probabilidad de default es ≥ 0.5 se clasifica como "riesgo", y si es menor, como "seguro".
+        </p>
+
+        <div class="table-wrapper">
+          <div class="table-label">Matriz de confusión — Regresión Logística</div>
+          <table>
+            <thead>
+              <tr>
+                <th></th>
+                <th>Predicho: No Default</th>
+                <th>Predicho: Default</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Real: No Default</td>
+                <td>21.878</td>
+                <td>147</td>
+              </tr>
+              <tr>
+                <td>Real: Default</td>
+                <td>1.243</td>
+                <td>205</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="metric-callout">
+          <div class="metric-value">83,31%</div>
+          <p class="metric-desc">
+            <strong>ROC AUC del modelo.</strong> El recall es de 14% (de los verdaderos impagos, solo se detectó uno de cada siete), pero la precisión es de 58% (de los clasificados como impagos, más de la mitad lo eran). Una métrica más objetiva que no depende del umbral es el ROC AUC: este modelo alcanza un 83,31%, lo que implica un nivel de acierto bastante bueno.
+          </p>
+        </div>
+
+        <p class="analysis-desc">
+          Bajar el umbral de decisión para la clasificación sube el recall a expensas de la precisión. Con un umbral de 0.3, el recall sube a 25%. En la práctica, el umbral óptimo surgirá de un análisis sobre qué maximiza las utilidades de la entidad financiera. En la siguiente imagen se muestran todos los posibles valores de precisión y recall para cada umbral.
+        </p>
+        <div class="chart-container">
+          <img src="proyecto2/images/recall_precision.png" alt="Precisión vs Recall" />
+          <div class="chart-caption">
+            <span class="caption-dot"></span>
+            <span>Fig. 5 — Curva Precisión–Recall para distintos umbrales de clasificación</span>
+          </div>
+        </div>
+
+        <p class="analysis-desc">
+          Una pregunta relevante es qué variables son más importantes para predecir el default. Esta información es útil para quien otorga el crédito, como también para quien lo solicita. Dentro de la regresión logística esto puede observarse a partir de los coeficientes del modelo, siempre que las variables estén estandarizadas para permitir una comparación justa. A continuación se presentan dos imágenes: la primera con la estandarización correcta, y la segunda sin ella, como ejemplo ilustrativo de la importancia de normalizar las variables. Se observa que por ejemplo la edad tiene un peso mucho mayor cuando la variable es estandarizada.
+        </p>
+        <div class="chart-container">
+          <img src="proyecto2/images/importancia_lrbien.png" alt="Importancia variables (correcto)" />
+          <div class="chart-caption">
+            <span class="caption-dot"></span>
+            <span>Fig. 6 — Importancia de variables con estandarización correcta</span>
+          </div>
+        </div>
+        <div class="chart-container">
+          <img src="proyecto2/images/importancia_lrmal.png" alt="Importancia variables (sin estandarizar)" />
+          <div class="chart-caption">
+            <span class="caption-dot"></span>
+            <span>Fig. 7 — Importancia de variables sin estandarización (comparación ilustrativa)</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SECCIÓN 4: Random Forest -->
+    <div class="analysis-section">
+      <div class="section-header">
+        <div class="section-num">04</div>
+        <div class="section-heading-group">
+          <span class="section-tag">Modelo predictivo</span>
+          <h2>Random Forest</h2>
+        </div>
+      </div>
+      <div class="analysis-body">
+        <p class="analysis-desc">
+          El siguiente modelo es Random Forest, que sigue una serie de comparaciones lógicas en forma de árbol para realizar sus predicciones. A continuación se muestra la matriz de confusión correspondiente.
+        </p>
+
+        <div class="table-wrapper">
+          <div class="table-label">Matriz de confusión — Random Forest</div>
+          <table>
+            <thead>
+              <tr>
+                <th></th>
+                <th>Predicho: No Default</th>
+                <th>Predicho: Default</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Real: No Default</td>
+                <td>21.967</td>
+                <td>58</td>
+              </tr>
+              <tr>
+                <td>Real: Default</td>
+                <td>1.350</td>
+                <td>98</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="metric-callout">
+          <div class="metric-value">84,33%</div>
+          <p class="metric-desc">
+            <strong>ROC AUC del modelo.</strong> Este modelo presenta un recall de 7% y una precisión de 63%. Su poder predictivo es ligeramente superior al de la regresión logística, alcanzando un ROC AUC de 84,33%.
+          </p>
+        </div>
+
+        <p class="analysis-desc">
+          Al igual que en la sección anterior, se presenta la relación entre precisión y recall para todos los valores posibles del umbral de decisión.
+        </p>
+        <div class="chart-container">
+          <img src="proyecto2/images/randomforest.png" alt="Precisión vs Recall Random Forest" />
+          <div class="chart-caption">
+            <span class="caption-dot"></span>
+            <span>Fig. 8 — Curva Precisión–Recall para Random Forest</span>
+          </div>
+        </div>
+
+        <p class="analysis-desc">
+          La importancia relativa de cada variable en el modelo Random Forest se observa en la siguiente imagen.
+        </p>
+        <div class="chart-container">
+          <img src="proyecto2/images/importancia_rf.png" alt="Importancia variables Random Forest" />
+          <div class="chart-caption">
+            <span class="caption-dot"></span>
+            <span>Fig. 9 — Importancia de variables en el modelo Random Forest</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SECCIÓN 5: Comparación -->
+    <div class="analysis-section">
+      <div class="section-header">
+        <div class="section-num">05</div>
+        <div class="section-heading-group">
+          <span class="section-tag">Conclusión</span>
+          <h2>Comparación de modelos</h2>
+        </div>
+      </div>
+      <div class="analysis-body">
+        <p class="analysis-desc">
+          En esta última sección se comparan ambos modelos utilizando la métrica ROC AUC, que permite una evaluación independiente del umbral de decisión. La curva ROC a continuación ilustra el desempeño comparado.
+        </p>
+        <div class="chart-container">
+          <img src="proyecto2/images/curvaROC.png" alt="Curva ROC comparación" />
+          <div class="chart-caption">
+            <span class="caption-dot"></span>
+            <span>Fig. 10 — Curva ROC: Regresión Logística vs. Random Forest</span>
+          </div>
+        </div>
+        <p class="analysis-desc">
+          Para entender qué es esta comparación se debe entender qué se está graficando. En el eje "recall" se grafica la proporción de verdaderos positivos, y en el eje "threshold" se grafica la proporción de falsos positivos. La comparación se hace midiendo el área bajo esta curva que muestra el trade-off entre detectar positivos correctamente y equivocarse marcando falsos positivos. Típicamente un modelo con un ROC AUC mayor a 0.8 ya se considera un buen modelo.
+        </p>
+      </div>
+    </div>
+
+  </div><!-- /content-wrapper -->
+
+  <!-- ── FOOTER ── -->
+  <footer class="project-footer">
+    <div class="footer-inner">
+      <div class="footer-text">
+        <strong>Análisis de Riesgo Crediticio</strong>
+        <p>Fuente: Kaggle.com · Python, Sklearn, Pandas, Matplotlib</p>
+      </div>
+      <div class="footer-nav">
+        <a href="proyecto1.html" class="footer-btn secondary">
+          <svg width="14" height="14" viewBox="0 0 16 16" fill="none">
+            <path d="M13 8H3M7 4L3 8l4 4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          Proyecto anterior
+        </a>
+        <a href="proyecto3.html" class="footer-btn primary">
+          Siguiente proyecto
+          <svg width="14" height="14" viewBox="0 0 16 16" fill="none">
+            <path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </a>
+      </div>
+    </div>
+  </footer>
+
+</body>
+</html>

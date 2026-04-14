@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Airbnb NYC — Proyecto 3</title>
+  <link rel="stylesheet" href="proyecto3.css" />
+</head>
+<body>
+
+  <!-- ── NAV ── -->
+  <nav>
+    <a href="index.html" class="nav-back">
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+        <path d="M13 8H3M7 4L3 8l4 4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      Volver al portafolio
+    </a>
+    <div class="nav-logo">ML<span>.</span></div>
+    <span class="nav-tag">Proyecto 03</span>
+  </nav>
+
+  <!-- ── HERO ── -->
+  <section class="project-hero">
+    <div class="hero-content">
+      <div class="hero-eyebrow">
+        <span class="hero-num">03 / 05</span>
+        <span class="hero-divider"></span>
+        <span class="hero-badge">Visualización interactiva</span>
+      </div>
+      <h1>Base de datos<br/>de <em>Airbnb</em> NYC</h1>
+      <div class="hero-meta">
+        <div class="meta-item">
+          <span class="meta-label">Ciudad</span>
+          <span class="meta-value">Nueva York</span>
+        </div>
+        <div class="meta-item">
+          <span class="meta-label">Fuente</span>
+          <span class="meta-value">Kaggle.com</span>
+        </div>
+        <div class="meta-item">
+          <span class="meta-label">Herramientas</span>
+          <div class="meta-chips">
+            <span class="meta-chip">Excel</span>
+            <span class="meta-chip">Tableau Public</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── INTRO ── -->
+  <div class="intro-block">
+    <div class="intro-inner">
+      <div>
+        <p class="intro-label">Introducción</p>
+        <h2 class="intro-side-title">Entendiendo el negocio de Airbnb en Nueva York</h2>
+      </div>
+      <div class="intro-text">
+        <p>
+          En este proyecto se trabaja con la base de datos <strong>"New York City Airbnb Open Data"</strong> disponible en Kaggle. El objetivo es entender las diferencias del negocio de alquiler temporario en los distintos barrios y zonas de la ciudad de Nueva York.
+        </p>
+        <p>
+          El proceso comienza con la descarga del archivo en formato CSV, que luego se convierte a formato XLSX para trabajarlo en Excel. Allí se realiza la reestructuración de filas a columnas y la limpieza completa de los datos. Con los datos preparados, el análisis y la visualización se realizan en Tableau Public, aprovechando su API para presentar los resultados de forma interactiva.
+        </p>
+      </div>
+    </div>
+
+    <!-- Pipeline visual -->
+    <div class="pipeline">
+      <div class="pipeline-step">
+        <div class="pipeline-icon">📥</div>
+        <span class="pipeline-label">Descarga</span>
+      </div>
+      <span class="pipeline-arrow">→</span>
+      <div class="pipeline-step">
+        <div class="pipeline-icon">📊</div>
+        <span class="pipeline-label">Excel</span>
+      </div>
+      <span class="pipeline-arrow">→</span>
+      <div class="pipeline-step">
+        <div class="pipeline-icon">🧹</div>
+        <span class="pipeline-label">Limpieza</span>
+      </div>
+      <span class="pipeline-arrow">→</span>
+      <div class="pipeline-step">
+        <div class="pipeline-icon">📈</div>
+        <span class="pipeline-label">Tableau</span>
+      </div>
+      <span class="pipeline-arrow">→</span>
+      <div class="pipeline-step">
+        <div class="pipeline-icon">🔍</div>
+        <span class="pipeline-label">Insights</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── CONTENIDO ── -->
+  <div class="content-wrapper">
+
+    <div class="analysis-section">
+      <div class="section-header">
+        <div class="section-num">01</div>
+        <div class="section-heading-group">
+          <span class="section-tag">Resultados interactivos</span>
+          <h2>Análisis de datos en Tableau</h2>
+        </div>
+      </div>
+      <div class="analysis-body">
+        <p class="analysis-desc">
+          En esta sección se pueden observar los resultados del análisis. Se presentan de modo interactivo gracias a la API de Tableau Public — podés explorar los gráficos, filtrar por barrio, tipo de habitación, precio y otras variables directamente desde el panel.
+        </p>
+
+        <div class="tableau-wrapper">
+          <div class="tableau-top-bar"></div>
+          <div class="tableau-label">
+            <span class="tableau-label-dot"></span>
+            <span>Tableau Public — Interactivo en vivo</span>
+          </div>
+          <div class="tableau-inner">
+            <div class='tableauPlaceholder' id='viz1776113574843' style='position: relative'>
+              <noscript>
+                <a href='#'>
+                  <img alt=' ' src='https://public.tableau.com/static/images/Pr/Proyecto3_17761111262820/Historia1/1_rss.png' style='border: none' />
+                </a>
+              </noscript>
+              <object class='tableauViz' style='display:none;'>
+                <param name='host_url' value='https%3A%2F%2Fpublic.tableau.com%2F' />
+                <param name='embed_code_version' value='3' />
+                <param name='site_root' value='' />
+                <param name='name' value='Proyecto3_17761111262820&#47;Historia1' />
+                <param name='tabs' value='yes' />
+                <param name='toolbar' value='yes' />
+                <param name='static_image' value='https://public.tableau.com/static/images/Pr/Proyecto3_17761111262820/Historia1/1.png' />
+                <param name='animate_transition' value='yes' />
+                <param name='display_static_image' value='yes' />
+                <param name='display_spinner' value='yes' />
+                <param name='display_overlay' value='yes' />
+                <param name='display_count' value='yes' />
+                <param name='language' value='es-ES' />
+                <param name='filter' value='publish=yes' />
+                <param name='filter' value='showOnboarding=true' />
+              </object>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+  </div><!-- /content-wrapper -->
+
+  <!-- ── FOOTER ── -->
+  <footer class="project-footer">
+    <div class="footer-inner">
+      <div class="footer-text">
+        <strong>Análisis Airbnb — Nueva York</strong>
+        <p>Fuente: Kaggle.com · Excel, Tableau Public</p>
+      </div>
+      <div class="footer-nav">
+        <a href="proyecto2.html" class="footer-btn secondary">
+          <svg width="14" height="14" viewBox="0 0 16 16" fill="none">
+            <path d="M13 8H3M7 4L3 8l4 4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          Proyecto anterior
+        </a>
+        <a href="proyecto4.html" class="footer-btn primary">
+          Siguiente proyecto
+          <svg width="14" height="14" viewBox="0 0 16 16" fill="none">
+            <path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ── TABLEAU SCRIPT ── -->
+  <script type='text/javascript'>
+    var divElement = document.getElementById('viz1776113574843');
+    var vizElement = divElement.getElementsByTagName('object')[0];
+    vizElement.style.width  = '1016px';
+    vizElement.style.height = '1014px';
+    var scriptElement = document.createElement('script');
+    scriptElement.src = 'https://public.tableau.com/javascripts/api/viz_v1.js';
+    vizElement.parentNode.insertBefore(scriptElement, vizElement);
+  </script>
+
+</body>
+</html>
