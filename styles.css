@@ -682,3 +682,20 @@
       .photo-frame { width: 200px; height: 200px; }
       .projects-grid { grid-template-columns: 1fr; }
     }
+
+
+    /* download link */
+.download-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: var(--accent);
+  font-weight: 500;
+  font-size: 0.9rem;
+  text-decoration: none;
+  border-bottom: 1.5px solid rgba(30,58,138,0.25);
+  padding-bottom: 1px;
+  transition: border-color 0.2s, color 0.2s;
+  cursor: pointer;
+}
+.download-link:hover { color: var(--accent2); border-color: var(--accent2); }
