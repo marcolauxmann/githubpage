@@ -1,0 +1,1113 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Estimaciones de ingreso con redes neuronales convolucionales</title>
+  <link rel="stylesheet" href="styles4.css" />
+  <script src="script2.js"></script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</head>
+<body>
+
+  <!-- ── NAV ── -->
+  <nav>
+    <a href="index.html" class="nav-back">
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+        <path d="M13 8H3M7 4L3 8l4 4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      Volver al portafolio
+    </a>
+    <div class="nav-logo">ML<span>.</span></div>
+    <span class="nav-tag">Tesis de Licenciatura</span>
+  </nav>
+
+  <!-- ── HERO ── -->
+  <section class="project-hero">
+    <div class="hero-content">
+      <div class="hero-eyebrow">
+        <span class="hero-num">Tesis</span>
+        <span class="hero-divider"></span>
+        <span class="hero-badge">Deep Learning · Visión por Computadora</span>
+      </div>
+      <h1>Estimaciones del ingreso para <em>Gran Tucumán</em> con redes neuronales convolucionales e imágenes satelitales</h1>
+      <div class="hero-author">
+        Autor: <strong>Lauxmann Granillo, Marco</strong><br>
+        Director: <strong>Foguet, Santiago</strong> — Fecha: 22/05/2026<br>
+        También podés descargar el pdf original <a onclick="forzarDescarga('proyecto4/tesis.pdf', 'LauxmannGM-tesis.pdf')" class="download-link">aquí.</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── ABSTRACT ── -->
+  <div class="abstract-block">
+    <div class="abstract-inner">
+      <p class="abstract-label">Resumen</p>
+      <div class="abstract-text">
+        <p>
+          En este estudio se realizan predicciones del ingreso per cápita promedio para regiones con un nivel de desagregación menor al radio censal para la región de Gran Tucumán - Tafí Viejo para el segundo trimestre del año 2022.
+        </p>
+        <p>
+          El estudio parte de la utilización de la Encuesta Permanente Hogares y el Censo Nacional de Población, Hogares y Viviendas para construir una base de datos de ingresos georreferenciada. Luego se utiliza un modelo de Deep Learning, con redes neuronales convolucionales utilizando de base la arquitectura EfficientNetV2-S para realizar predicciones del ingreso promedio para un nivel de desagregación espacial de 50x50 metros.
+        </p>
+        <p>
+          Los resultados muestran que el modelo obtiene un <span class="result-pill">R² = 0.125</span>. Un resultado que se corresponde con la limitada disponibilidad de imágenes utilizada en el entrenamiento del modelo y las limitaciones de capacidad computacional.
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── MAIN LAYOUT (Sidebar TOC + Content) ── -->
+  <div class="main-layout">
+
+    <!-- SIDEBAR TOC -->
+    <aside class="toc-sidebar">
+      <p class="toc-label">📑 Contenidos</p>
+      <ul class="toc-list">
+        <li class="toc-item"><a href="#intro">Introducción</a></li>
+        <li class="toc-item"><a href="#marco">Marco Teórico</a></li>
+        <li class="toc-item"><a href="#base-datos">Construcción de Base de Datos</a>
+          <ul class="toc-list toc-sub">
+            <li class="toc-item"><a href="#metodologia">Introducción a la metodología</a></li>
+            <li class="toc-item"><a href="#variables">Construcción de variables</a></li>
+            <li class="toc-item"><a href="#mcp">Estimaciones con modelo MCP</a></li>
+            <li class="toc-item"><a href="#opt-modelo">Elección de modelo óptimo</a></li>
+            <li class="toc-item"><a href="#mapas">Elaboración de mapas</a></li>
+          </ul>
+        </li>
+        <li class="toc-item"><a href="#entrenamiento">Entrenamiento del Modelo</a>
+          <ul class="toc-list toc-sub">
+            <li class="toc-item"><a href="#rn">Redes Neuronales</a></li>
+            <li class="toc-item"><a href="#efficientnet">EfficientNetV2-S</a></li>
+            <li class="toc-item"><a href="#augment">Data Augmentation</a></li>
+            <li class="toc-item"><a href="#resultados-train">Resultados del Entrenamiento</a></li>
+          </ul>
+        </li>
+        <li class="toc-item"><a href="#discusion">Discusión</a>
+          <ul class="toc-list toc-sub">
+            <li class="toc-item"><a href="#limitaciones">Limitaciones</a></li>
+            <li class="toc-item"><a href="#mejoras">Mejoras Futuras</a></li>
+          </ul>
+        </li>
+        <li class="toc-item"><a href="#conclusiones">Conclusiones</a></li>
+        <li class="toc-item"><a href="#anexos">Anexos</a></li>
+      </ul>
+    </aside>
+
+    <!-- MAIN CONTENT -->
+    <main class="content-area">
+
+      <!-- SECCIÓN 1: INTRODUCCIÓN -->
+      <section class="thesis-section" id="intro">
+        <div class="section-eyebrow">
+          <span class="section-num-badge">§ 1</span>
+        </div>
+        <h2>Introducción</h2>
+        
+        <p class="thesis-body">
+          El objetivo de este estudio es utilizar técnicas de Deep Learning para predecir el ingreso mediante imágenes satelitales, y conseguir, a diferencia de la Encuesta Permanente de Hogares (EPH) tener datos con mayor desagregación espacial y potencialmente con mayor continuidad temporal.
+        </p>
+
+        <p class="thesis-body">
+          Para realizar estas predicciones primero se debe entrenar un modelo de redes neuronales convolucionales con técnicas de transfer-learning y fine-tuning utilizando una famosa arquitectura: <strong>EfficientNetV2-S</strong>. Para esto se necesita una base de datos que asocie cada imagen satelital a una etiqueta del ingreso per cápita familiar promedio de la zona que representa esa imagen.
+        </p>
+
+        <p class="thesis-body">
+          En Argentina no existe ningún relevamiento oficial que consulte simultáneamente sobre ubicación con precisión radio censal e ingresos (de cualquier tipo), es por eso que esta base de datos debe construirse, y para lograr ello se utilizarán en conjunto la EPH, que releva ingresos, y el Censo 2022, que releva ubicación con precisión de radio censal.
+        </p>
+
+        <p class="thesis-body">
+          Así este estudio se estructura en 2 grandes pasos: Construcción de una base de datos y el uso de un modelo de Deep Learning, tanto el entrenamiento como las predicciones del modelo. Se explicará cómo construir la base de datos siguiendo recomendaciones de la literatura y se desarrollará una explicación del uso de Deep Learning.
+        </p>
+
+        <p class="thesis-body">
+          Se deja al cierre del estudio las conclusiones y discusión, donde se incluyen limitaciones y futuras mejoras. Este apartado es fundamental ya que se explica bajo que circunstancias existe validez estadística en el uso de estas técnicas modernas.
+        </p>
+      </section>
+
+      <!-- SECCIÓN 2: MARCO TEÓRICO -->
+      <section class="thesis-section" id="marco">
+        <div class="section-eyebrow">
+          <span class="section-num-badge">§ 2</span>
+        </div>
+        <h2>Marco Teórico</h2>
+
+        <p class="thesis-body">
+          Este estudio toma de punto de partida la metodología utilizada en estudios previos quienes utilizan imágenes satelitales de alta calidad y técnicas de machine learning para crear mapas de ingreso con alta desagregación geográfica. Entrenan un modelo de redes neuronales convolucionales (CNN) para realizar predicciones del ingreso per cápita para el Área Metropolitana de Buenos Aires. Mejoran la resolución y frecuencia de la información censal basando la arquitectura del modelo en EfficientNetV2 y logran un <span class="math-inline">R<sup>2</sup> = 0,878</span>, pasando la resolución espacial y superando el rendimiento de la literatura existente en ese momento.
+        </p>
+
+        <p class="thesis-body">
+          Otros estudios utilizan imágenes satelitales de alta calidad para estimar gastos en consumo y riqueza en activos. Muestran como al utilizar datos de encuestas en conjunto con imágenes satelitales de 5 países africanos (Nigeria, Tanzania, Uganda, Malawi, Rwanda) un modelo de redes neuronales puede ser entrenado para explicar hasta el 75% de la variabilidad del producto económico local. Utilizan únicamente información pública. Además demuestran cuán poderosas pueden ser las técnicas de machine learning aplicadas a información limitada, sugiriendo gran potencial de mejoras en aplicaciones a distintas ciencias.
+        </p>
+
+        <p class="thesis-body">
+          Dentro de este contexto este estudio busca utilizar técnicas de visión por computadora junto a imágenes satelitales para predecir el ingreso. La literatura muestra que con el uso de información pública los resultados pueden ser bastante buenos, teniendo una alta capacidad explicativa, sin embargo estos se hacen bajo técnicas que requieren una gran capacidad computacional, por lo que la calidad de los resultados está sujeta a esta capacidad.
+        </p>
+      </section>
+
+      <hr class="section-divider">
+
+      <!-- SECCIÓN 3: CONSTRUCCIÓN DE BASE DE DATOS -->
+      <section class="thesis-section" id="base-datos">
+        <div class="section-eyebrow">
+          <span class="section-num-badge">§ 3</span>
+        </div>
+        <h2>Construcción de Base de Datos</h2>
+
+        <!-- Subsección 3.1 -->
+        <div class="thesis-subsection" id="metodologia">
+          <h3>Introducción a la metodología</h3>
+          
+          <p class="thesis-body">
+            No existe ninguna encuesta oficial en Argentina que releve simultáneamente ingresos y ubicación geográfica con alto nivel de desagregación. La EPH releva ingresos pero su nivel de desagregación es a nivel aglomerado urbano, mientras que el Censo releva ubicación geográfica con alta desagregación, pero no consulta sobre ningún tipo de ingresos.
+          </p>
+
+          <p class="thesis-body">
+            Esta sección explica cómo obtener una base de datos que contenga una etiqueta de ingreso promedio para el mínimo nivel de desagregación geográfica según las particiones censales, es decir, nivel radio censal. Como referencia un radio censal es un área geográfica de tal tamaño que contiene aproximadamente 300 viviendas en áreas urbanas, por lo que sus tamaños pueden variar considerablemente de acuerdo con la densidad poblacional de la zona. Es la mínima unidad operativa de relevamiento territorial disponible públicamente.
+          </p>
+
+          <p class="thesis-body">
+            En este estudio se utiliza el Censo 2022 y por su proximidad temporal la EPH del segundo trimestre 2022. Para construir esta base de datos se seguirá una metodología derivada de la literatura. Esta metodología consiste en encontrar variables correlacionadas con la variable ingreso que estén relevadas tanto en las encuestas de la EPH como en las encuestas del Censo. Ese será el grupo de variables con las que se trabajará. Luego se realizan estimaciones de los determinantes del ingreso con la base de datos que releva el ingreso, es decir, se estima el ingreso con el grupo de variables correlacionadas con el ingreso en la EPH. De esta forma se obtienen los parámetros estimados, que luego serán usados en los datos censales para predecir el ingreso per cápita familiar de cada persona dentro de cada radio censal.
+          </p>
+
+          <p class="thesis-body">
+            Primero se estima un modelo de regresión lineal usando datos de la EPH, formalmente:
+          </p>
+
+          <div class="equation-block">
+            <div class="equation-label">Modelo de regresión lineal EPH</div>
+            $$y_{i}^{eph} = \beta^{eph} X_{i}^{eph} + \varepsilon_{i}$$
+          </div>
+
+          <p class="thesis-body">
+            Donde <span class="math-inline">y</span> representa el ingreso per cápita familiar del individuo <span class="math-inline">i</span>, <span class="math-inline">β</span> es el vector de coeficientes y <span class="math-inline">X</span> es el vector de variables explicativas de interés de cada individuo. Luego se utiliza cada parámetro estimado para hacer una predicción del ingreso en cada individuo con los datos censales:
+          </p>
+
+          <div class="equation-block">
+            <div class="equation-label">Predicción con parámetros EPH</div>
+            $$\hat{y}_{i} = \hat{\beta^{eph}} X_{i}^{censo}$$
+          </div>
+
+          <p class="thesis-body">
+            Donde la predicción del ingreso para cada individuo con los datos del censo se realiza a partir de los parámetros ya estimados con la EPH y el mismo set de variables usadas en EPH.
+          </p>
+
+          <p class="thesis-body">
+            Una vez realizadas las predicciones para cada persona relevada en los radios censales de interés, se puede construir una variable de salida para cada radio censal que es el ingreso per cápita familiar promedio:
+          </p>
+
+          <div class="equation-block">
+            <div class="equation-label">Ingreso promedio por radio censal</div>
+            $$\hat{Y_{j}} = \sum_{i = 1} \frac{\hat{y_{ij}}}{n_{j}}$$
+          </div>
+
+          <p class="thesis-body">
+            Donde <span class="math-inline">j</span> es cada radio censal, y se calcula el ingreso per cápita familiar promedio por radio censal con ponderación simple.
+          </p>
+        </div>
+
+        <!-- Subsección 3.2 -->
+        <div class="thesis-subsection" id="variables">
+          <h3>Construcción de Variables</h3>
+          
+          <p class="thesis-body">
+            Dentro del conjunto de variables posibles a utilizar, solo las siguientes fueron seleccionadas por su sentido económico para predecir el ingreso. Las variables que se presentan a continuación son relevadas por ambos operativos estadísticos, pero no están construidas de la misma forma, por lo que se tuvo que reconstruir las variables para que sean perfectamente comparables.
+          </p>
+
+          <div class="table-wrapper">
+            <div class="table-header">
+              <span class="table-header-title">Tabla 3.1 — Lista de variables y códigos de referencia</span>
+            </div>
+            <div class="table-scroll">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Variables</th>
+                    <th>Código EPH</th>
+                    <th>Código Censo</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>Ingreso per cápita familiar</td>
+                    <td>IPCF</td>
+                    <td>---</td>
+                  </tr>
+                  <tr>
+                    <td>Material predominante de los pisos</td>
+                    <td>IV3</td>
+                    <td>H10</td>
+                  </tr>
+                  <tr>
+                    <td>Material de la cubierta exterior del techo</td>
+                    <td>V</td>
+                    <td>H11_H12</td>
+                  </tr>
+                  <tr>
+                    <td>Presencia de cielorraso</td>
+                    <td>IV5</td>
+                    <td>H11_H12</td>
+                  </tr>
+                  <tr>
+                    <td>Acceso a agua (dentro/fuera)</td>
+                    <td>IV6</td>
+                    <td>H13</td>
+                  </tr>
+                  <tr>
+                    <td>Régimen de tenencia de la vivienda</td>
+                    <td>II7</td>
+                    <td>H22</td>
+                  </tr>
+                  <tr>
+                    <td>Sexo registrado al nacer</td>
+                    <td>CH04</td>
+                    <td>P02</td>
+                  </tr>
+                  <tr>
+                    <td>Edad</td>
+                    <td>CH06</td>
+                    <td>EDAD</td>
+                  </tr>
+                  <tr>
+                    <td>Nivel educativo más alto cursado</td>
+                    <td>CH12</td>
+                    <td>MNI</td>
+                  </tr>
+                  <tr>
+                    <td>Jefe de hogar</td>
+                    <td>CH03</td>
+                    <td>P01</td>
+                  </tr>
+                  <tr>
+                    <td>Desagüe cloacas</td>
+                    <td>IV11</td>
+                    <td>H18</td>
+                  </tr>
+                  <tr>
+                    <td>Miembros del hogar</td>
+                    <td>IX_Tot</td>
+                    <td>TOTPOBH</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="table-note">
+              <strong>(---)</strong> Variable no presente | <strong>Fuente:</strong> Elaboración propia
+            </div>
+          </div>
+
+          <p class="thesis-body">
+            Existe otro gran grupo de variables potencialmente importantes en las estimaciones del ingreso que fueron descartadas porque no mejoraban los resultados obtenidos. Algunos ejemplos son tipo de vivienda, cantidad de ambientes, procedencia del agua, presencia y ubicación del baño/letrina, combustible principal para cocinar, cobertura de salud, condición de actividad, entre otras.
+          </p>
+        </div>
+
+        <!-- Subsección 3.3 -->
+        <div class="thesis-subsection" id="mcp">
+          <h3>Estimaciones con Modelo MCP</h3>
+          
+          <p class="thesis-body">
+            Para poder trabajar con los datos se define como región de interés el Aglomerado 29, es decir, la región Gran Tucumán - Tafí Viejo. Se estima un modelo de regresión lineal con mínimos cuadrados ponderados (MCP) con los datos de la EPH para obtener los coeficientes que servirán para las predicciones.
+          </p>
+
+          <p class="thesis-body">
+            Luego de aplicar el factor de expansión muestral se tiene un total de 948.628 personas, pero para realizar las estimaciones de forma correcta se debe limpiar la base de datos debido a variables mal cargadas. Esto deja un total de 805.308 observaciones con las que se realizan las estimaciones utilizando el factor de expansión.
+          </p>
+
+          <p class="thesis-body">
+            Antes de hacer las estimaciones mediante MCP se redefinen los valores extremos de la variable ingreso per cápita familiar para que tomen un valor igual al percentil 1 y al percentil 99. Además, esta variable se redefine como el logaritmo del ingreso. Los resultados de las estimaciones aparecen en la siguiente tabla:
+          </p>
+
+          <div class="table-wrapper">
+            <div class="table-header">
+              <span class="table-header-title">Tabla 3.2 — Resultados de la regresión con MCP</span>
+            </div>
+            <div class="table-scroll">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Variable</th>
+                    <th>Coef.</th>
+                    <th>Std. Err.</th>
+                    <th>t</th>
+                    <th class="center">P > |t|</th>
+                    <th>[0.025</th>
+                    <th>0.975]</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>Constante</td>
+                    <td>9,5139</td>
+                    <td>0,095</td>
+                    <td>100,601</td>
+                    <td class="center sig">0,000</td>
+                    <td>9,328</td>
+                    <td>9,699</td>
+                  </tr>
+                  <tr>
+                    <td>Edad</td>
+                    <td>-0,0051</td>
+                    <td>0,003</td>
+                    <td>-1,772</td>
+                    <td class="center insig">0,076</td>
+                    <td>-0,011</td>
+                    <td>0,001</td>
+                  </tr>
+                  <tr>
+                    <td>Edad²</td>
+                    <td>0,0001</td>
+                    <td>0,000</td>
+                    <td>4,111</td>
+                    <td class="center sig">0,000</td>
+                    <td>0,000</td>
+                    <td>0,000</td>
+                  </tr>
+                  <tr>
+                    <td>Miembros totales del hogar</td>
+                    <td>-0,1568</td>
+                    <td>0,022</td>
+                    <td>-7,162</td>
+                    <td class="center sig">0,000</td>
+                    <td>-0,200</td>
+                    <td>-0,114</td>
+                  </tr>
+                  <tr>
+                    <td>Miembros²</td>
+                    <td>0,0078</td>
+                    <td>0,002</td>
+                    <td>4,092</td>
+                    <td class="center sig">0,000</td>
+                    <td>0,004</td>
+                    <td>0,012</td>
+                  </tr>
+                  <tr>
+                    <td>Hombre</td>
+                    <td>0,1445</td>
+                    <td>0,026</td>
+                    <td>5,553</td>
+                    <td class="center sig">0,000</td>
+                    <td>0,093</td>
+                    <td>0,196</td>
+                  </tr>
+                  <tr>
+                    <td>Primario completo</td>
+                    <td>0,0744</td>
+                    <td>0,052</td>
+                    <td>1,424</td>
+                    <td class="center insig">0,155</td>
+                    <td>-0,028</td>
+                    <td>0,177</td>
+                  </tr>
+                  <tr>
+                    <td>Secundario incompleto</td>
+                    <td>0,1263</td>
+                    <td>0,041</td>
+                    <td>3,094</td>
+                    <td class="center sig">0,002</td>
+                    <td>0,046</td>
+                    <td>0,206</td>
+                  </tr>
+                  <tr>
+                    <td>Secundario completo</td>
+                    <td>0,3407</td>
+                    <td>0,049</td>
+                    <td>6,890</td>
+                    <td class="center sig">0,000</td>
+                    <td>0,244</td>
+                    <td>0,438</td>
+                  </tr>
+                  <tr>
+                    <td>Superior incompleto</td>
+                    <td>0,4623</td>
+                    <td>0,051</td>
+                    <td>9,081</td>
+                    <td class="center sig">0,000</td>
+                    <td>0,362</td>
+                    <td>0,562</td>
+                  </tr>
+                  <tr>
+                    <td>Superior completo</td>
+                    <td>0,7272</td>
+                    <td>0,060</td>
+                    <td>12,048</td>
+                    <td class="center sig">0,000</td>
+                    <td>0,609</td>
+                    <td>0,846</td>
+                  </tr>
+                  <tr>
+                    <td>Jefe de hogar</td>
+                    <td>0,1597</td>
+                    <td>0,035</td>
+                    <td>4,587</td>
+                    <td class="center sig">0,000</td>
+                    <td>0,091</td>
+                    <td>0,228</td>
+                  </tr>
+                  <tr>
+                    <td>Piso calidad alta</td>
+                    <td>0,1633</td>
+                    <td>0,036</td>
+                    <td>4,533</td>
+                    <td class="center sig">0,000</td>
+                    <td>0,093</td>
+                    <td>0,234</td>
+                  </tr>
+                  <tr>
+                    <td>Acceso a agua potable</td>
+                    <td>0,2109</td>
+                    <td>0,058</td>
+                    <td>3,618</td>
+                    <td class="center sig">0,000</td>
+                    <td>0,097</td>
+                    <td>0,325</td>
+                  </tr>
+                  <tr>
+                    <td>Propietario de la vivienda</td>
+                    <td>0,1945</td>
+                    <td>0,033</td>
+                    <td>5,912</td>
+                    <td class="center sig">0,000</td>
+                    <td>0,130</td>
+                    <td>0,259</td>
+                  </tr>
+                  <tr>
+                    <td>Desagüe del baño</td>
+                    <td>0,2301</td>
+                    <td>0,028</td>
+                    <td>8,108</td>
+                    <td class="center sig">0,000</td>
+                    <td>0,174</td>
+                    <td>0,286</td>
+                  </tr>
+                  <tr class="stats-row">
+                    <td><strong>Observaciones</strong></td>
+                    <td colspan="2">1.966</td>
+                    <td><strong>Adj. R²</strong></td>
+                    <td colspan="3">0,350</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="table-note">
+              <strong>Fuente:</strong> Elaboración propia. Todas las variables mostradas son significativas al 1% excepto edad (10%).
+            </div>
+          </div>
+
+          <p class="thesis-body">
+            Debido a que el modelo LASSO introduce un sesgo en las estimaciones y los resultados no son significativamente distintos a los obtenidos mediante MCP, se decide como modelo óptimo el de MCP.
+          </p>
+        </div>
+
+        <!-- Subsección 3.4 -->
+        <div class="thesis-subsection" id="opt-modelo">
+          <h3>Elección de Modelo Óptimo</h3>
+
+          <p class="thesis-body">
+            Anteriormente se han mostrado los resultados de las estimaciones. Para elegir el mejor modelo se compara la distribución de ingresos utilizando únicamente datos de la EPH y las distribuciones con datos del Censo luego de realizar predicciones con ambos modelos.
+          </p>
+
+          <div class="figure-block">
+            <div class="figure-container">
+              <div class="figure-top-bar"></div>
+              <img src="proyecto4/img/histograma_eph.png" alt="Histograma EPH">
+            </div>
+            <p class="figure-caption"><strong>Figura 3.1</strong> — Distribución del ingreso per cápita familiar en EPH</p>
+          </div>
+
+          <div class="figure-block">
+            <div class="figure-container">
+              <div class="figure-top-bar"></div>
+              <img src="proyecto4/img/predicciones_mcp.png" alt="Predicciones MCP">
+            </div>
+            <p class="figure-caption"><strong>Figura 3.2</strong> — Distribución de ingresos predichos con modelo MCP</p>
+          </div>
+
+          <div class="figure-block">
+            <div class="figure-container">
+              <div class="figure-top-bar"></div>
+              <img src="proyecto4/img/predicciones_lasso.png" alt="Predicciones LASSO">
+            </div>
+            <p class="figure-caption"><strong>Figura 3.3</strong> — Distribución de ingresos predichos con modelo LASSO</p>
+          </div>
+        </div>
+
+        <!-- Subsección 3.5 -->
+        <div class="thesis-subsection" id="mapas">
+          <h3>Elaboración de Mapas</h3>
+
+          <p class="thesis-body">
+            Luego de haber predicho el ingreso per cápita familiar para cada persona dentro de cada radio censal utilizando los estimadores obtenidos, se calcula el ingreso promedio por radio censal. Ahora cada radio censal tiene asignado un ingreso, por lo que se puede observar la distribución espacial de estos ingresos.
+          </p>
+
+          <p class="thesis-body">
+            El siguiente paso consiste en la elaboración de una grilla cuadriculada de 50x50 metros sobre todo el área de interés. Este paso se realiza porque la entrada de un modelo de redes neuronales convolucionales debe ser un conjunto de elementos de la misma dimensión.
+          </p>
+
+          <p class="thesis-body">
+            Para poder asignar una etiqueta de ingreso a cada celda de la grilla se utiliza un promedio ponderado por la proporción de intersección espacial de cada radio sobre cada celda, formalmente:
+          </p>
+
+          <div class="equation-block">
+            <div class="equation-label">Ingreso ponderado por celda</div>
+            $$\hat{y_i} = \frac{\sum_{j} A(C_i \cap R_j) y_j}{A(C_i)}$$
+          </div>
+
+          <div class="figure-block">
+            <div class="figure-container">
+              <div class="figure-top-bar"></div>
+              <img src="proyecto4/img/mapa_smt.png" alt="Mapa SMT">
+            </div>
+            <p class="figure-caption"><strong>Figura 3.4</strong> — Mapa de ingresos promedio por radio censal</p>
+          </div>
+
+          <div class="figure-block">
+            <div class="figure-container">
+              <div class="figure-top-bar"></div>
+              <img src="proyecto4/img/mapa_smt_grilla.png" alt="Mapa con grilla">
+            </div>
+            <p class="figure-caption"><strong>Figura 3.5</strong> — Mapa de ingresos interpolados en grilla 50x50m</p>
+          </div>
+
+          <p class="thesis-body">
+            Las imágenes satelitales utilizadas son captadas mediante registros de radiación electromagnética reflejada por la superficie terrestre. Cada imagen satelital tiene una resolución de 188x188 píxeles, con 3 bandas RGB (rojo, verde y azul) dando una resolución de 0,27 metros por píxel. Las imágenes posteriormente son reescaladas computacionalmente a 224x224 píxeles.
+          </p>
+
+          <p class="thesis-body">
+            Los colores del espectro visible se miden por su longitud de onda <span class="math-inline">λ</span>. Los rangos aproximados para los canales RGB son:
+          </p>
+
+          <ul class="thesis-list">
+            <li>Banda R (rojo): 450-510 nm</li>
+            <li>Banda G (verde): 530-590 nm</li>
+            <li>Banda B (azul): 640-670 nm</li>
+          </ul>
+        </div>
+      </section>
+
+      <hr class="section-divider">
+
+      <!-- SECCIÓN 4: ENTRENAMIENTO DEL MODELO -->
+      <section class="thesis-section" id="entrenamiento">
+        <div class="section-eyebrow">
+          <span class="section-num-badge">§ 4</span>
+        </div>
+        <h2>Entrenamiento del Modelo</h2>
+
+        <div class="thesis-subsection" id="rn">
+          <h3>Redes Neuronales</h3>
+
+          <p class="thesis-body">
+            Este estudio está dentro de una línea de investigación que busca explotar fuentes de datos no tradicionales para la medición de variables, en este caso es el ingreso per cápita familiar. La elección de técnicas de Deep Learning se fundamenta en su capacidad para modelar relaciones altamente no lineales y capturar patrones complejos en datos de gran dimensionalidad.
+          </p>
+
+          <p class="thesis-body">
+            Dentro de este conjunto de técnicas, las redes neuronales convolucionales (CNN) ocupan un lugar central. A través de múltiples capas jerárquicas las CNN pueden identificar desde características simples, como bordes o texturas, hasta patrones más complejos, como redes viales o vegetación, lo que las convierte en herramientas adecuadas para el análisis de imágenes satelitales.
+          </p>
+
+          <p class="thesis-body">
+            La arquitectura base del modelo será la desarrollada por investigadores previos y mejorada posteriormente. La arquitectura es <strong>EfficientNetV2-S</strong>. Esta red, previamente entrenada en grandes bases de datos permite identificar patrones espaciales complejos en las 3 bandas del espectro visible, y sobre esta red se incorpora una red neuronal densa para que el modelo se ajuste a la tarea específica de la predicción del ingreso en Gran Tucumán - Tafí Viejo para el año 2022.
+          </p>
+
+          <p class="thesis-body">
+            Debido a limitaciones computacionales, el área de estimación se reduce arbitrariamente a la gran mancha urbana de Gran Tucumán - Tafí Viejo. Esto permite reducir el total de imágenes de 180.760 a 80.633. Luego se dividen los datos por cercanía espacial en 3 grupos:
+          </p>
+
+          <ul class="thesis-list">
+            <li>70% entrenamiento</li>
+            <li>15% validación</li>
+            <li>15% testeo</li>
+          </ul>
+
+          <div class="figure-block">
+            <div class="figure-container">
+              <div class="figure-top-bar"></div>
+              <img src="proyecto4/img/mancha_urbana.png" alt="Mancha urbana">
+            </div>
+            <p class="figure-caption"><strong>Figura 4.1</strong> — Reducción del área de estudio a la mancha urbana</p>
+          </div>
+
+          <div class="figure-block">
+            <div class="figure-container">
+              <div class="figure-top-bar"></div>
+              <img src="proyecto4/img/train_val_distributions.png" alt="Distribuciones">
+            </div>
+            <p class="figure-caption"><strong>Figura 4.2</strong> — Distribución de datos de entrenamiento y validación</p>
+          </div>
+
+          <div class="table-wrapper">
+            <div class="table-header">
+              <span class="table-header-title">Tabla 4.1 — Arquitectura del modelo basado en EfficientNetV2-S</span>
+            </div>
+            <div class="table-scroll">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Capas (tipo)</th>
+                    <th>Salida</th>
+                    <th>Número de parámetros</th>
+                    <th>Entrenable</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>input_layer_1 (InputLayer)</td>
+                    <td>(None, 224, 224, 3)</td>
+                    <td class="mono">0</td>
+                    <td>—</td>
+                  </tr>
+                  <tr>
+                    <td>multiply (Multiply)</td>
+                    <td>(None, 224, 224, 3)</td>
+                    <td class="mono">0</td>
+                    <td>—</td>
+                  </tr>
+                  <tr>
+                    <td>efficientnetv2-s (Functional)</td>
+                    <td>(None, 1280)</td>
+                    <td class="mono">20.331.360</td>
+                    <td>Con fine-tuning</td>
+                  </tr>
+                  <tr>
+                    <td>dense (Dense)</td>
+                    <td>(None, 256)</td>
+                    <td class="mono">327.936</td>
+                    <td>Sí</td>
+                  </tr>
+                  <tr>
+                    <td>batch_normalization</td>
+                    <td>(None, 256)</td>
+                    <td class="mono">1.024</td>
+                    <td>Sí</td>
+                  </tr>
+                  <tr>
+                    <td>dropout_1 (Dropout)</td>
+                    <td>(None, 256)</td>
+                    <td class="mono">0</td>
+                    <td>—</td>
+                  </tr>
+                  <tr>
+                    <td>dense_1 (Dense)</td>
+                    <td>(None, 128)</td>
+                    <td class="mono">32.896</td>
+                    <td>Sí</td>
+                  </tr>
+                  <tr>
+                    <td>batch_normalization_1</td>
+                    <td>(None, 128)</td>
+                    <td class="mono">512</td>
+                    <td>Sí</td>
+                  </tr>
+                  <tr>
+                    <td>dropout_2 (Dropout)</td>
+                    <td>(None, 128)</td>
+                    <td class="mono">0</td>
+                    <td>—</td>
+                  </tr>
+                  <tr>
+                    <td>output (Dense)</td>
+                    <td>(None, 1)</td>
+                    <td class="mono">129</td>
+                    <td>Sí</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="table-note">
+              <strong>(—)</strong> No aplica | <strong>Fuente:</strong> Elaboración propia
+            </div>
+          </div>
+
+          <div class="figure-block">
+            <div class="figure-container">
+              <div class="figure-top-bar"></div>
+              <img src="proyecto4/img/efficientnet_funcionamiento1.png" alt="EfficientNet arquitectura">
+            </div>
+            <p class="figure-caption"><strong>Figura 4.3</strong> — Diagrama de estructura del modelo CNN</p>
+          </div>
+
+          <p class="thesis-body">
+            El modelo completo cuenta con un total de 20.693.857 parámetros, de los cuales 361.729 pueden ser entrenados. Los hiperparámetros del modelo fueron seleccionados siguiendo prácticas estándar:
+          </p>
+
+          <div class="params-grid">
+            <div class="param-item"><span class="param-key">IMG SIZE</span> = (224, 224, 3)</div>
+            <div class="param-item"><span class="param-key">BATCH SIZE</span> = 512</div>
+            <div class="param-item"><span class="param-key">EPOCHS P1</span> = 100</div>
+            <div class="param-item"><span class="param-key">LEARNING RATE P1</span> = 0,001</div>
+            <div class="param-item"><span class="param-key">OPTIMIZATION</span> = ADAM</div>
+            <div class="param-item"><span class="param-key">FINE TUNE FROM</span> = -30</div>
+            <div class="param-item"><span class="param-key">LEARNING RATE P2</span> = 0,00001</div>
+            <div class="param-item"><span class="param-key">EPOCHS P2</span> = 05</div>
+          </div>
+        </div>
+
+        <div class="thesis-subsection" id="efficientnet">
+          <h3>EfficientNetV2-S</h3>
+
+          <p class="thesis-body">
+            La arquitectura EfficientNet es propuesta buscando escalar redes neuronales convolucionales para mejorar precisión. Encuentran que se deben escalar simultáneamente las siguientes 3 dimensiones:
+          </p>
+
+          <ul class="thesis-list">
+            <li><strong>Profundidad:</strong> Más capas</li>
+            <li><strong>Anchura:</strong> Más canales</li>
+            <li><strong>Resolución:</strong> Imágenes de mayor calidad</li>
+          </ul>
+
+          <p class="thesis-body">
+            Se deben escalar todas las dimensiones juntas con un coeficiente compuesto <span class="math-inline">φ</span> que las balancea. El problema de la versión V1 es que al ser escalado de forma tan abrupta, desarrolló cuellos de botella que la versión EfficientNetV2 resuelve a través de:
+          </p>
+
+          <ul class="thesis-list">
+            <li><strong>Fused-MBConv:</strong> Mejora el paralelismo del hardware moderno (GPUs y TPUs)</li>
+            <li><strong>Training-aware NAS:</strong> Optimiza simultaneamente precisión, velocidad de entrenamiento y tamaño de parámetros</li>
+            <li><strong>Progressive Learning:</strong> En los primeros epochs se usan imágenes pequeñas con poca regularización, que aumenta gradualmente</li>
+          </ul>
+
+          <p class="thesis-body">
+            EfficientNet presenta distintas versiones: S, M y L. El modelo S es el punto de partida óptimo para la mayoría de escenarios porque ofrece un equilibrio entre eficiencia de recursos y buenos resultados.
+          </p>
+        </div>
+
+        <div class="thesis-subsection" id="augment">
+          <h3>Data-Augmentation</h3>
+
+          <p class="thesis-body">
+            El uso de técnicas de data augmentation resulta fundamental en el entrenamiento de modelos de Deep Learning aplicados a imágenes, especialmente cuando la disponibilidad de datos es limitada, o cuando se busca mejorar la capacidad de generalización del modelo.
+          </p>
+
+          <p class="thesis-body">
+            Particularmente en este trabajo se implementaron transformaciones aleatorias de rotaciones y variaciones en la iluminación. Estas modificaciones permiten simular diferentes orientaciones y condiciones, permitiendo que el modelo no dependa de patrones específicos de la fuente original, y así reduce el riesgo de sobreajuste.
+          </p>
+
+          <p class="thesis-body">
+            Data augmentation no reemplaza ni amplía la base de datos original, lo que hace es que el modelo aplica transformaciones en tiempo real cada vez que ve una imagen, es decir que en cada epoch el modelo ve la misma imagen con una transformación aleatoria.
+          </p>
+        </div>
+
+        <div class="thesis-subsection" id="resultados-train">
+          <h3>Resultados del Entrenamiento</h3>
+
+          <p class="thesis-body">
+            Luego de entrenar el modelo en Google Colab con GPU A100 y RAM ampliada durante aproximadamente 8 horas se presentan los resultados. Durante el entrenamiento de 80 epochs el modelo con los mejores resultados fue el de la iteración 80.
+          </p>
+
+          <div class="equation-block">
+            <div class="equation-label">Error cuadrático medio</div>
+            $$MSE = \frac{1}{n} \sum_{i=1}^{n} (y_i - \hat{y_i})^2$$
+          </div>
+
+          <div class="equation-block">
+            <div class="equation-label">Error absoluto medio</div>
+            $$MAE = \frac{1}{n} \sum_{i=1}^{n} |y_i - \hat{y_i}|$$
+          </div>
+
+          <div class="figure-block">
+            <div class="figure-container">
+              <div class="figure-top-bar"></div>
+              <img src="proyecto4/img/training_history.png" alt="Training history">
+            </div>
+            <p class="figure-caption"><strong>Figura 4.4</strong> — Historial de entrenamiento MSE y MAE</p>
+          </div>
+
+          <div class="figure-block">
+            <div class="figure-container">
+              <div class="figure-top-bar"></div>
+              <img src="proyecto4/img/predictions_analysis.png" alt="Análisis predicciones">
+            </div>
+            <p class="figure-caption"><strong>Figura 4.5</strong> — Análisis de predicciones y distribución de errores</p>
+          </div>
+
+          <div class="callout">
+            <div class="callout-value">R² = 0.125</div>
+            <div class="callout-desc">
+              <strong>Resultado principal:</strong> El modelo alcanza un coeficiente de determinación de 0.125, lo que significa que explica el 12,5% de la variabilidad del ingreso. Este resultado se corresponde con la limitada disponibilidad de imágenes utilizada en el entrenamiento y las limitaciones de capacidad computacional.
+            </div>
+          </div>
+
+          <p class="thesis-body">
+            Se observa que la distribución de errores es aproximadamente normal con una asimetría hacia la izquierda, lo que indica que el modelo realiza predicciones de forma sesgada hacia los ingresos más bajos. El MAE total es de 3.987 pesos.
+          </p>
+        </div>
+      </section>
+
+      <hr class="section-divider">
+
+      <!-- SECCIÓN 5: DISCUSIÓN -->
+      <section class="thesis-section" id="discusion">
+        <div class="section-eyebrow">
+          <span class="section-num-badge">§ 5</span>
+        </div>
+        <h2>Discusión</h2>
+
+        <div class="thesis-subsection" id="limitaciones">
+          <h3>Limitaciones</h3>
+
+          <p class="thesis-body">
+            Las técnicas de Deep Learning tienen diferentes limitaciones, y entenderlas permite hacer un buen uso de estas técnicas modernas. La primera limitación que se menciona es sobre el gran costo computacional que tienen estos modelos de redes neuronales convolucionales.
+          </p>
+
+          <p class="thesis-body">
+            La siguiente limitación que se menciona es propia de la aplicación económica de este trabajo y es sobre la construcción de la base de datos. La construcción de la base de datos se hace partiendo de técnicas para inferir sobre el ingreso de las personas teniendo referencia geográfica a nivel radio censal. Estas inferencias no parten de fuentes oficiales de relevamiento, por lo que los resultados están fuertemente influenciados por las decisiones iniciales del investigador.
+          </p>
+
+          <p class="thesis-body">
+            Otra limitación tiene que ver con el uso de imágenes satelitales. Debido a limitaciones de acceso a estas imágenes, se utilizaron imágenes con fecha de 2025, y el Censo más cercano a esa fecha es el de 2022. Hay 3 años de diferencia entre las estimaciones.
+          </p>
+
+          <p class="thesis-body">
+            Otra limitación es que se predice el ingreso mediante características observables, y además estas características son dependientes del ingreso constante y no del ingreso corriente, por lo que el modelo solo puede captar el ingreso promedio de largo plazo.
+          </p>
+
+          <p class="thesis-body">
+            Se menciona también la limitada heterogeneidad visual presente en las imágenes satelitales para todo el área de Gran Tucumán - Tafí Viejo. Una reducida variabilidad en las características urbanas observables restringe la capacidad del modelo para identificar diferencias sistemáticas vinculadas al nivel de ingresos.
+          </p>
+        </div>
+
+        <div class="thesis-subsection" id="mejoras">
+          <h3>Mejoras Futuras</h3>
+
+          <p class="thesis-body">
+            Este estudio es una primera aproximación al uso de Deep Learning para estimar el ingreso en la región de Gran Tucumán - Tafí Viejo por lo que tiene gran potencial de mejoras futuras.
+          </p>
+
+          <p class="thesis-body">
+            Lo más sencillo tiene que ver con la capacidad computacional. Entrenar el modelo durante más epochs o hacer un modelo con una tasa de ajuste más fina (menor tasa de aprendizaje) puede lograr mejoras sin tener que cambiar nada metodológicamente. Además cambios en el hardware utilizado para el entrenamiento puede reducir el tiempo promedio de demora por epoch.
+          </p>
+
+          <p class="thesis-body">
+            Una siguiente mejora tiene que ver con la disponibilidad de los datos de entrenamiento. Este modelo fue construido utilizando únicamente el aglomerado 29 de la EPH, y un subconjunto de imágenes que representan a esta región. El uso de mayor cantidad de imágenes y de mejor calidad puede resultar en grandes mejoras en las predicciones del modelo. Además las imágenes utilizadas pueden ser de varios tipos, aquí solo se utilizaron imágenes diurnas con baja nubosidad y solamente con 3 bandas (RGB).
+          </p>
+        </div>
+      </section>
+
+      <hr class="section-divider">
+
+      <!-- SECCIÓN 6: CONCLUSIONES -->
+      <section class="thesis-section" id="conclusiones">
+        <div class="section-eyebrow">
+          <span class="section-num-badge">§ 6</span>
+        </div>
+        <h2>Conclusiones</h2>
+
+        <p class="thesis-body">
+          La poca disponibilidad de información estadística puede en muchas situaciones parecer un gran limitante para la investigación o evaluación de políticas, sobre todo cuando se trata de estadísticas oficiales sobre ingreso por su poca continuidad temporal y/o reducida desagregación espacial.
+        </p>
+
+        <p class="thesis-body">
+          Este estudio plantea el uso de información alternativa, de libre disponibilidad, para resolver ese problema. Para ello se deben emplear modernas técnicas de Deep Learning que son fuertemente respaldadas por la evidencia empírica.
+        </p>
+
+        <p class="thesis-body">
+          Este escrito es una primera aproximación al uso de CNN para estimar el ingreso en la región Gran Tucumán - Tafí Viejo para el año 2022 y los resultados evidencian el potencial de estas técnicas. La capacidad de predecir ingresos mediante imágenes satelitales con un nivel de desagregación mayor al radio censal es una herramienta muy poderosa que se puede extrapolar para predecir ingresos en otras regiones y en otros momentos del tiempo bajo determinadas limitaciones.
+        </p>
+
+        <p class="thesis-body">
+          La extensión de aplicaciones que se origina a partir de este estudio son amplias, y pueden ser potencialmente muy beneficiosas en el avance de la economía aplicada. Particularmente se pueden realizar predicciones del ingreso para regiones no cubiertas por la EPH y también se puede mejorar la continuidad temporal de las estadísticas.
+        </p>
+      </section>
+
+      <hr class="section-divider">
+
+      <!-- SECCIÓN 7: ANEXOS -->
+      <section class="thesis-section" id="anexos">
+        <div class="section-eyebrow">
+          <span class="section-num-badge">§ 7</span>
+        </div>
+        <h2>Anexos</h2>
+
+        <div class="thesis-subsection">
+          <h3>Supuestos del Modelo de Regresión Lineal</h3>
+
+          <p class="thesis-body">
+            Para la correcta estimación del modelo mediante Mínimos Cuadrados Ordinarios (MCO), se asumen los siguientes supuestos:
+          </p>
+
+          <ol class="thesis-list numbered">
+            <li><strong>Linealidad en los parámetros:</strong> el modelo es lineal en <span class="math-inline">β</span>.</li>
+            <li><strong>Exogeneidad estricta:</strong> $$E[\varepsilon_i | X_i] = 0$$</li>
+            <li><strong>Homocedasticidad:</strong> $$\text{Var}(\varepsilon_i | X_i) = \sigma^2$$</li>
+            <li><strong>No autocorrelación:</strong> $$\text{Cov}(\varepsilon_i, \varepsilon_j) = 0 \quad \forall i \neq j$$</li>
+            <li><strong>No multicolinealidad perfecta:</strong> la matriz de regresores tiene rango completo.</li>
+            <li><strong>Normalidad:</strong> $$\varepsilon_i \sim \mathcal{N}(0, \sigma^2)$$</li>
+          </ol>
+        </div>
+
+        <div class="thesis-subsection">
+          <h3>Estimaciones con LASSO</h3>
+
+          <p class="thesis-body">
+            Debido a que el objetivo de esta sección no es hacer inferencia estadística, sino realizar predicciones del ingreso individual, también se estimó un modelo LASSO. Este modelo agrega una penalidad que reduce la varianza del modelo. La función objetivo a minimizar en LASSO es la siguiente:
+          </p>
+
+          <div class="equation-block">
+            <div class="equation-label">Función objetivo LASSO</div>
+            $$C(\beta) = \frac{1}{2n} \sum_{i = 1}^{n} (y_i - \hat{y_i})^2 + \lambda \sum_{s = 1}^{p} |\beta_s|$$
+          </div>
+
+          <p class="thesis-body">
+            Para mejorar las predicciones del modelo se divide el conjunto de datos en 80% entrenamiento y 20% validación. El mejor modelo es aquel que minimice la función de pérdida en el conjunto de datos de validación.
+          </p>
+
+          <div class="figure-block">
+            <div class="figure-container">
+              <div class="figure-top-bar"></div>
+              <img src="proyecto4/img/modelo_lasso_grid.png" alt="LASSO grid search">
+            </div>
+            <p class="figure-caption"><strong>Figura A.1</strong> — Búsqueda de λ óptimo para LASSO</p>
+          </div>
+
+          <div class="figure-block">
+            <div class="figure-container">
+              <div class="figure-top-bar"></div>
+              <img src="proyecto4/img/modelo_lasso_grid2.png" alt="LASSO grid search 2">
+            </div>
+            <p class="figure-caption"><strong>Figura A.2</strong> — Optimización de LASSO minimizando error en validación</p>
+          </div>
+
+          <div class="table-wrapper">
+            <div class="table-header">
+              <span class="table-header-title">Tabla A.1 — Coeficientes estimados con LASSO (λ=0.001)</span>
+            </div>
+            <div class="table-scroll">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Variable</th>
+                    <th>Coeficiente</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>Edad</td>
+                    <td>-0,001915</td>
+                  </tr>
+                  <tr>
+                    <td>Edad²</td>
+                    <td>0,000093</td>
+                  </tr>
+                  <tr>
+                    <td>Miembros totales del hogar</td>
+                    <td>-0,142786</td>
+                  </tr>
+                  <tr>
+                    <td>Miembros²</td>
+                    <td>0,006713</td>
+                  </tr>
+                  <tr>
+                    <td>Hombre</td>
+                    <td>0,152176</td>
+                  </tr>
+                  <tr>
+                    <td>Primario completo</td>
+                    <td>0,045720</td>
+                  </tr>
+                  <tr>
+                    <td>Secundario incompleto</td>
+                    <td>0,113613</td>
+                  </tr>
+                  <tr>
+                    <td>Secundario completo</td>
+                    <td>0,286073</td>
+                  </tr>
+                  <tr>
+                    <td>Superior incompleto</td>
+                    <td>0,386690</td>
+                  </tr>
+                  <tr>
+                    <td>Superior completo</td>
+                    <td>0,654837</td>
+                  </tr>
+                  <tr>
+                    <td>Jefe de hogar</td>
+                    <td>0,158648</td>
+                  </tr>
+                  <tr>
+                    <td>Techo exterior (calidad alta)</td>
+                    <td>0,010295</td>
+                  </tr>
+                  <tr>
+                    <td>Techo interior (calidad media)</td>
+                    <td>-0,221592</td>
+                  </tr>
+                  <tr>
+                    <td>Techo interior (calidad alta)</td>
+                    <td>-0,072025</td>
+                  </tr>
+                  <tr>
+                    <td>Piso (calidad alta)</td>
+                    <td>0,163039</td>
+                  </tr>
+                  <tr>
+                    <td>Baño</td>
+                    <td>0,000000</td>
+                  </tr>
+                  <tr>
+                    <td>Acceso a agua potable</td>
+                    <td>0,205626</td>
+                  </tr>
+                  <tr>
+                    <td>Propietario de la vivienda</td>
+                    <td>0,175424</td>
+                  </tr>
+                  <tr>
+                    <td>Desagüe</td>
+                    <td>0,174130</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="table-note">
+              <strong>Fuente:</strong> Elaboración propia. LASSO no debe utilizarse para inferencia debido a su sesgo.
+            </div>
+          </div>
+        </div>
+      </section>
+
+    </main>
+  </div><!-- /main-layout -->
+
+  <!-- ── FOOTER ── -->
+  <footer class="project-footer">
+    <div class="footer-inner">
+      <div class="footer-text">
+        <strong>Tesis de Licenciatura en Economía</strong>
+        <p>Universidad Nacional de Tucumán — 2026 | Deep Learning · CNN · Imágenes Satelitales</p>
+      </div>
+      <div class="footer-nav">
+        <a href="index.html" class="footer-btn secondary">
+          <svg width="14" height="14" viewBox="0 0 16 16" fill="none">
+            <path d="M13 8H3M7 4L3 8l4 4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          Volver al portafolio
+        </a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ── SCRIPT: TOC Active Tracking ── -->
+  <script>
+    // Marca la sección activa en el TOC mientras haces scroll
+    const sections = document.querySelectorAll('.thesis-section');
+    const tocItems = document.querySelectorAll('.toc-item');
+
+    window.addEventListener('scroll', () => {
+      let current = '';
+      sections.forEach(section => {
+        const sectionTop = section.offsetTop;
+        if (pageYOffset >= sectionTop - 150) {
+          current = section.getAttribute('id');
+        }
+      });
+
+      tocItems.forEach(item => {
+        item.classList.remove('active');
+        if (item.querySelector('a').getAttribute('href') === '#' + current) {
+          item.classList.add('active');
+        }
+      });
+    });
+  </script>
+
+</body>
+</html>
